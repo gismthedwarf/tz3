@@ -3,6 +3,7 @@
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PaymentStatusController;
+use App\Http\Controllers\UserController;
 use App\Http\Middleware\ApiToken;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +30,9 @@ Route::middleware([ApiToken::class])->group(function () {
         ->name('payment_statuses.index');
     Route::delete('/payments/{payment}', [PaymentController::class, 'destroy'])
         ->name('payments.destroy');
+
+    Route::get('/users', [UserController::class, 'index'])
+        ->name('users.index');
 });
 
 Route::get('/statuses', [PaymentStatusController::class, 'index'])

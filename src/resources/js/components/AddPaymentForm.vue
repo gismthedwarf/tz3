@@ -10,14 +10,17 @@
                                 cols="12"
                                 md="4"
                             >
-                                <v-text-field
-                                    v-model="login"
-                                    label="Логин"
+                                <v-select
+                                    v-model="selected_user"
+                                    :items="users"
+                                    item-title="name"
+                                    item-value="id"
+                                    label="Пользователь"
+                                    single-line
                                     required
-                                    hide-details
-                                ></v-text-field>
-                                <div v-if="feedback.login">
-                                    <p v-for="item in feedback.login">
+                                ></v-select>
+                                <div v-if="feedback.user_id">
+                                    <p v-for="item in feedback.user_id">
                                         <span style="color:red" v-text="item"></span>
                                     </p>
 
@@ -112,13 +115,16 @@ export default {
             sum: '',
             creds: '',
             selected_currency: null,
+            selected_user: null,
             currencies: [{'title': 'Выберите валюту', 'disabled': true, 'selected': true}],
+            users: [{'title': 'Выберите пользователя', 'disabled': true, 'selected': true}],
             feedback: '',
             success: '',
         };
     },
     created() {
         this.getCurrencies();
+        this.getUsers();
     },
     methods: {
         resetInput() {
@@ -126,10 +132,11 @@ export default {
             this.sum = '';
             this.creds = '';
             this.selected_currency = '';
+            this.selected_user = '';
         },
         addPayment() {
             let data = {
-                login: this.login,
+                user_id: this.selected_user,
                 sum: this.sum,
                 creds: this.creds,
                 currency_id: this.selected_currency
@@ -153,6 +160,14 @@ export default {
                 .get('/currencies')
                 .then((response) => {
                     this.currencies = response.data.data
+                })
+                .catch(error => console.log(error))
+        },
+        getUsers() {
+            axios
+                .get('/users')
+                .then((response) => {
+                    this.users = response.data.data
                 })
                 .catch(error => console.log(error))
         },

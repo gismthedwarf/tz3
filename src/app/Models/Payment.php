@@ -11,7 +11,7 @@ class Payment extends Model
     use HasFactory;
 
     protected $fillable = [
-        'login',
+        'user_id',
         'creds',
         'sum',
         'currency_id',
@@ -22,11 +22,9 @@ class Payment extends Model
         return $this->belongsTo(Currency::class);
     }
 
-    /**
-     * Get formatted sum
-     */
-//    public function getSumAttribute($value): string
-//    {
-//        return number_format(((int) $value * 0.01), 2, '.', '');
-//    }
+    public function user(): belongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }

@@ -22,10 +22,10 @@ class StorePaymentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'login' => ['required', 'string', 'min:2'],
             'creds' => ['required', 'string', 'min:10'],
             'sum' => ['required', 'numeric'],
             'currency_id' => ['required', 'exists:currencies,id'],
+            'user_id' => ['required', 'exists:users,id'],
         ];
 
     }
@@ -34,6 +34,7 @@ class StorePaymentRequest extends FormRequest
     {
         return [
             'currency_id' => 'currency',
+            'user_id' => 'user',
         ];
     }
 

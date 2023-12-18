@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePaymentRequest;
 use App\Http\Resources\PaymentResource;
-use App\Models\Currency;
 use App\Models\Payment;
 
 class PaymentController extends Controller
@@ -35,9 +34,7 @@ class PaymentController extends Controller
 
     public function show(Payment $payment)
     {
-
         return new PaymentResource($payment);
-
     }
 
     public function store(StorePaymentRequest $request)
@@ -47,10 +44,10 @@ class PaymentController extends Controller
 
         $payment = Payment::create(
             [
-                'login' => $data['login'],
                 'creds' => $data['creds'],
                 'sum' => ((float)$data['sum'] * 100),
                 'currency_id' => $data['currency_id'],
+                'user_id' => $data['user_id'],
             ]
         );
 
@@ -64,10 +61,10 @@ class PaymentController extends Controller
         $data = $request->validated();
 
         $payment->update([
-            'login' => $data['login'],
             'creds' => $data['creds'],
             'sum' => ((float)$data['sum'] * 100),
             'currency_id' => $data['currency_id'],
+            'user_id' => $data['user_id'],
         ]);
 
         return new PaymentResource($payment);

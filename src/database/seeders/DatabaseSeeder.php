@@ -2,10 +2,12 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Currency;
 use App\Models\Payment;
+use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -37,6 +39,18 @@ class DatabaseSeeder extends Seeder
             Currency::create($currency);
         }
 
-        Payment::factory(20)->create();
+        User::create(
+            [
+                'name' => 'admin',
+                'email' => 'admin@admin.ru',
+                'email_verified_at' => now(),
+                'password' => Hash::make('changeme'),
+                'remember_token' => Str::random(10),
+            ]
+        );
+
+        User::factory(9)->create();
+
+        Payment::factory(25)->create();
     }
 }

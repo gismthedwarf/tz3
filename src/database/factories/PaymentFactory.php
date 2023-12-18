@@ -2,9 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Currency;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 class PaymentFactory extends Factory
 {
@@ -21,10 +21,10 @@ class PaymentFactory extends Factory
     public function definition(): array
     {
         return [
-            'login' => fake()->name(),
-            'creds' => fake()->text(40),
-            'sum' => fake()->randomNumber(5, false),
-            'currency_id' => fake()->randomElement([1, 2, 3]),
+            'creds' => fake()->text(120),
+            'sum' => fake()->randomNumber(8),
+            'currency_id' => Currency::pluck('id')->random(),
+            'user_id' => User::pluck('id')->random(),
         ];
     }
 }

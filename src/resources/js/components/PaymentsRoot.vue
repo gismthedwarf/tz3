@@ -1,6 +1,6 @@
 <template>
     <v-row>
-        <add-payment-form @refreshPaymentsEvent="getPayments" v-model="valid" />
+        <add-payment-form @refreshPaymentsEvent="getPayments"/>
     </v-row>
     <v-card>
         <v-card-title>
@@ -32,7 +32,10 @@
 
             <template v-slot:item="{ item }">
                 <tr :class="getColor(item.status)">
-                    <td>{{ item.login }}</td>
+                    <td>
+                        {{ item.user.name }}<br>
+                        <span class="text-grey">{{ item.user.email }}</span>
+                    </td>
                     <td>{{ item.creds }}</td>
                     <td :title="item.currency.title">{{ item.currency.symbol }}{{ item.sum }}</td>
                     <td>{{ item.currency.code }}</td>
@@ -74,9 +77,7 @@ export default {
         totalItems: 0,
         search: '',
         payments: [],
-        statuses: [
-            'open', 'paid'
-        ],
+        statuses: ['open', 'paid'], //todo: get statuses
         headers: [
             {
                 title: 'Логин',
@@ -90,11 +91,11 @@ export default {
         ],
     }),
     created () {
-        this.getPayments({page: this.page, itemsPerPage: this.itemsPerPage});
+        this.getPayments({page: this.page});
         this.getStatuses();
     },
     methods: {
-        getPayments({ page, itemsPerPage}) {
+        getPayments({page}) {
             this.loading = true
             axios
                 .get('/payments', {
@@ -143,13 +144,11 @@ export default {
                 )
         },
         deletePayment (item) {
-            console.log(item, item.id);
             if (confirm('Are you sure you want to delete this payment?')) {
                 axios
                     .delete(`/payments/${item.id}`)
                     .then((response) => {
-                        //show OK message
-                        console.log(response.data)
+                        //todo: show OK message
                         this.payments.splice(this.payments.indexOf(item), 1);
                     })
                     .catch(
