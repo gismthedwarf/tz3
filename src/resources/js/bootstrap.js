@@ -7,9 +7,14 @@
 import axios from 'axios';
 window.axios = axios;
 
-window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-window.axios.defaults.headers.common['token'] = 'supersecrettoken';
-window.axios.defaults.baseURL = '/api/';
+axios.defaults.withCredentials = true;
+axios.defaults.withXSRFToken = true;
+
+axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+axios.defaults.headers.common['Content-Type'] = 'application/json';
+axios.defaults.headers.common['token'] = 'supersecrettoken';
+
+// axios.defaults.baseURL = '/api/';
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening

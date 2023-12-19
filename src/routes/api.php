@@ -23,7 +23,8 @@ Route::get('/payments', [PaymentController::class, 'index'])
 Route::get('/payments/{payment}', [PaymentController::class, 'show'])
     ->name('payments.show');
 
-Route::middleware([ApiToken::class])->group(function () {
+//Route::middleware([ApiToken::class])->group(function () {
+Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/payments', [PaymentController::class, 'store'])
         ->name('payments.store');
     Route::post('/payments/{payment}/toggleStatus', [PaymentStatusController::class, 'toggle'])

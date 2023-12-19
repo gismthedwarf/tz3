@@ -39,7 +39,7 @@ class DatabaseSeeder extends Seeder
             Currency::create($currency);
         }
 
-        User::create(
+        $user = User::create(
             [
                 'name' => 'admin',
                 'email' => 'admin@admin.ru',
@@ -48,6 +48,8 @@ class DatabaseSeeder extends Seeder
                 'remember_token' => Str::random(10),
             ]
         );
+
+        $user->createToken('access');
 
         User::factory(9)->create();
 

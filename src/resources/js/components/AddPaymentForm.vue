@@ -1,6 +1,71 @@
 <template>
-    <v-container>
-        <v-row>
+    <v-container :class="{'loading': loading}">
+        <v-row v-show="!user">
+            <v-col>
+                <v-form @submit.prevent="authenticate">
+                    <legend class="text-h4 mb-6">Войти</legend>
+                    <v-container>
+
+                        <v-row>
+                            <v-col
+                                cols="6"
+                                md="6"
+                            >
+                                <v-text-field
+                                    v-model="loginData.email"
+                                    label="Email"
+                                    hide-details
+                                    required
+                                    type="text"
+                                ></v-text-field>
+                                <div v-if="feedback.email">
+                                    <p v-for="item in feedback.email">
+                                        <span style="color:red" v-text="item"></span>
+                                    </p>
+
+                                </div>
+                            </v-col>
+
+                            <v-col
+                                cols="6"
+                                md="6"
+                            >
+                                <v-text-field
+                                    label="Реквизиты"
+                                    v-model="loginData.password"
+                                    required
+                                    hide-details
+                                    type="password"
+                                ></v-text-field>
+                                <div v-if="feedback.password">
+                                    <p v-for="item in feedback.password">
+                                        <span style="color:red" v-text="item"></span>
+                                    </p>
+
+                                </div>
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-btn
+                                class="me-4"
+                                type="submit"
+                            >
+                                Войти
+                            </v-btn>
+                            <div v-if="feedback.login">
+                                <p v-for="item in feedback.login">
+                                    <span style="color:red" v-text="item"></span>
+                                </p>
+                            </div>
+                        </v-row>
+                    </v-container>
+
+                </v-form>
+            </v-col>
+        </v-row>
+
+
+        <v-row v-show="user">
             <v-col>
                 <v-form @submit.prevent="addPayment">
                     <v-container>
@@ -111,7 +176,9 @@ export default {
     name: 'AddPaymentForm',
     data() {
         return {
-            login: '',
+            loginData: {'email': 'admin@admin.ru', 'password': 'changeme'},
+            user: false,
+            loading: true,
             sum: '',
             creds: '',
             selected_currency: null,
@@ -123,10 +190,26 @@ export default {
         };
     },
     created() {
-        this.getCurrencies();
-        this.getUsers();
+        //
     },
     methods: {
+        authenticate() {
+            let data = {
+                email: this.loginData.email,
+                password: this.loginData.password
+            }
+
+            axios.get('/sanctum/csrf-cookie').then(response => {
+                axios.post('/login', this.loginData).then(response => {
+                    this.user = true;
+                    this.getCurrencies();
+                    this.getUsers();
+                    this.loading = false;
+                }).catch(error => {
+                    this.feedback = error.response.data.errors
+                });
+            });
+        },
         resetInput() {
             this.login = '';
             this.sum = '';
@@ -143,7 +226,7 @@ export default {
             }
 
             axios
-                .post('/payments', data)
+                .post('/api/payments', data)
                 .then((response) => {
                     this.success = 'Successfully added',
                     this.feedback = '',
@@ -157,7 +240,7 @@ export default {
         },
         getCurrencies() {
             axios
-                .get('/currencies')
+                .get('/api/currencies')
                 .then((response) => {
                     this.currencies = response.data.data
                 })
@@ -165,7 +248,7 @@ export default {
         },
         getUsers() {
             axios
-                .get('/users')
+                .get('/api/users')
                 .then((response) => {
                     this.users = response.data.data
                 })

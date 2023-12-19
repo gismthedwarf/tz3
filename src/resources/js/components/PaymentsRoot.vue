@@ -6,15 +6,9 @@
         <v-card-title>
             Выплаты
             <v-spacer></v-spacer>
-            <v-text-field
-                v-model="search"
-                label="Поиск"
-                single-line
-            ></v-text-field>
         </v-card-title>
         <v-data-table-server
             :headers="headers"
-            :search="search"
 
             :items="payments"
             :items-length="totalItems"
@@ -75,7 +69,6 @@ export default {
         itemsPerPageVariants: [5, 10, 50, 100],
         loading: true,
         totalItems: 0,
-        search: '',
         payments: [],
         statuses: ['open', 'paid'], //todo: get statuses
         headers: [
@@ -98,7 +91,7 @@ export default {
         getPayments({page}) {
             this.loading = true
             axios
-                .get('/payments', {
+                .get('/api/payments', {
                     params: {
                         perPage: this.itemsPerPage,
                         page: page,
@@ -114,7 +107,7 @@ export default {
         },
         getStatuses() {
             axios
-                .get('/statuses')
+                .get('/api/statuses')
                 .then((response) => {
                     this.statuses = response.data
                 })
@@ -133,7 +126,7 @@ export default {
         toggleStatus(e, iid) {
             console.log(e, iid);
             axios
-                .post(`/payments/${iid}/toggleStatus`)
+                .post(`/api/payments/${iid}/toggleStatus`)
                 .then((response) => {
                     //show OK message
                     console.log(response.data)
@@ -146,7 +139,7 @@ export default {
         deletePayment (item) {
             if (confirm('Are you sure you want to delete this payment?')) {
                 axios
-                    .delete(`/payments/${item.id}`)
+                    .delete(`/api/payments/${item.id}`)
                     .then((response) => {
                         //todo: show OK message
                         this.payments.splice(this.payments.indexOf(item), 1);
