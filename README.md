@@ -10,6 +10,10 @@ https://tz3.gism.me
 
 ### Postman
 You need add this headers to test with Postman
- - token:supersecrettoken
  - Content-Type:application/json
  - Accept:application/json
+
+Also you need turn on Bearer token authorization,
+you token is: 
+
+    2|yALBuMAz3ljgS0rxjFCWHaBXCSpYsKNdLKJh0hQPc213dd3f
